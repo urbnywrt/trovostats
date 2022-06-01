@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Список подписчиков</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top " aria-label="navbar">
+    <div class="container">
+        <a class="navbar-brand" href="#">Trovo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse " id="navbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/mob5ter}">Подписчики</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/mob5ter_stat}">Статистика</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled">Chat</a>
+                </li>
+            </ul>
+            <span th:if="${user} == null">
+<a class="btn btn-success"
+   th:href="'https://open.trovo.live/page/login.html?client_id='+${client_id}+'&response_type=token&scope='+${scopes}+'&redirect_uri='+${redirUrl}"
+   role="button">Login with Trovo</a>
+</span>
+            <span class="navbar-nav d-sm-inline-flex flex-row" th:if="${user != null}">
+                 <li class="nav-item p-2 bd-highlight">
+          <img th:src="${user.getProfile_pic()}" alt="profilePic" width="25" height="25" class="rounded-circle flex-shrink-0">
+          </li>
+
+        <li class="nav-item dropdown d-flex align-items-center dropdown-link text-left">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+             data-bs-toggle="dropdown" aria-expanded="false" th:text="${user.getUsername()}">
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+          </ul>
+        </li>
+
+
+
+</span>
+        </div>
+    </div>
+</nav>
+
+<span th:if="${user} == null">
+    <h2 class="text-center" th:text="'Необходима авторизация через трово'"></h2>
+</span>
+<span th:if="${subs}">
+    <h1 class="text-center" th:text="'Список подписчиков (Всего '+${#lists.size(subs.getSubscriptions())} +')' "></h1>
+    <div class="table-responsive row-md-9">
+        <table class="table table-responsive-md table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th>Имя</th>
+                <th>Информация</th>
+                <th>Уровень подписки</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each=" sub : ${subs.getSubscriptions()}">
+                <td><img th:src="${sub.user.getProfile_pic()}" alt="profilePic" width="25" height="25" class="rounded-circle flex-shrink-0">
+                <a th:text="${sub.user.getDisplay_name()}"></a></td>
+                <td th:text="${'Подписка с '+#dates.format(sub.getSub_created_at() * 1000, 'dd.MM.yyyy')}"></td>
+                <td th:text="${sub.getSub_tier()+' lvl'}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+        </span>
+</body>
+</html>

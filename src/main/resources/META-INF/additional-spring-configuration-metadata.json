@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "clientid",
+      "type": "java.lang.String",
+      "description": "Trovo API client id"
+    },
+    {
+      "name": "secret",
+      "type": "java.lang.String",
+      "description": "Trovo API client secret"
+    }
+  ] }
